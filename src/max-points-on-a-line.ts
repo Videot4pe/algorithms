@@ -5,7 +5,7 @@
 
 function maxPoints(points: number[][]): number {
   let res = 1
-  for (let i = 0; i < points.length; i++) {
+  for (let i = 0; i < points.length - 1; i++) {
     let map = {}
     let vertical = 1
     for (let j = i + 1; j < points.length; j++) {
