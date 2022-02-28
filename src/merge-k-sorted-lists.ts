@@ -13,35 +13,72 @@ class ListNode {
   }
 }
 
-function addMinNumber(lists: Array<ListNode | null>, res: ListNode | null) {
-  let [minIndex, minValue] = [0, Infinity]
-  for (let i = 0; i < lists.length; i++) {
-    if (lists[i] && lists[i].val < minValue) {
-      minValue = lists[i].val
-      minIndex = i
-    }
+// function addMinNumber(lists: Array<ListNode | null>, res: ListNode | null) {
+//   let [minIndex, minValue] = [0, Infinity]
+//   for (let i = 0; i < lists.length; i++) {
+//     if (lists[i] && lists[i].val < minValue) {
+//       minValue = lists[i].val
+//       minIndex = i
+//     }
+//   }
+//   lists[minIndex] = lists[minIndex] ? lists[minIndex].next : null
+//   res.val = minValue
+//   if (lists.some(x => x)) {
+//     res.next = {
+//       val: null,
+//       next: null
+//     }
+//     addMinNumber(lists, res.next)
+//   }
+// }
+
+// function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+//   if (!lists.length || (lists.values && !lists.some(x => x))) {
+//     return null
+//   }
+//   const res: ListNode | null = {
+//     val: null,
+//     next: null
+//   }
+//   addMinNumber(lists, res)
+//   return res
+// };
+
+function merge2Lists(list1: ListNode | null, list2: ListNode | null) {
+  if (!list1 || list1.val == null) {
+    return list2
   }
-  lists[minIndex] = lists[minIndex] ? lists[minIndex].next : null
-  res.val = minValue
-  if (lists.some(x => x)) {
-    res.next = {
-      val: null,
-      next: null
-    }
-    addMinNumber(lists, res.next)
+  if (!list2 || list2.val == null) {
+    return list1
   }
+  let res: ListNode | null = null
+  if (list1.val < list2.val) {
+    res = list1
+    res.next = merge2Lists(list1.next, list2)
+  } else {
+    res = list2
+    res.next = merge2Lists(list1, list2.next)
+  }
+
+  return res
 }
 
 function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
-  if (!lists.length || (lists.values && !lists.some(x => x))) {
+  if (lists.length === 1) {
+    return lists[0]
+  }
+  if (!lists.length) {
     return null
   }
-  const res: ListNode | null = {
-    val: null,
-    next: null
+  let length = lists.length
+  while (length > 0) {
+    let [i, j] = [0, length]
+    for (; i < j; i++, j--) {
+      lists[i] = merge2Lists(lists[i], lists[j])
+    }
+    length = j
   }
-  addMinNumber(lists, res)
-  return res
+  return lists[0]
 };
 
 test('', () => {
